@@ -2,7 +2,10 @@ package controller;
 
 import java.util.Scanner;
 
+import model.data_structures.MaxColaCp;
+import model.data_structures.MaxHeapCP;
 import model.logic.MVCModelo;
+import model.logic.TravelTime;
 import view.MVCView;
 
 public class Controller {
@@ -27,77 +30,39 @@ public class Controller {
 	{
 		Scanner lector = new Scanner(System.in);
 		boolean fin = false;
-		String dato = "";
-		String respuesta = "";
+		int[] dato = new int[3];
+		dato[0] = 0; dato[1] = 0; dato[2] = 0; 
 
 		while( !fin ){
-			view.printMenu();
-
-			int option = lector.nextInt();
-			switch(option){
-				case 1:
-					System.out.println("--------- \nCrear Arreglo \nDar capacidad inicial del arreglo: ");
-				    int capacidad = lector.nextInt();
-				    modelo = new MVCModelo(capacidad); 
-					System.out.println("Arreglo Dinamico creado");
-					System.out.println("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
-
-				case 2:
-					System.out.println("--------- \nDar cadena (simple) a ingresar: ");
-					dato = lector.next();
-					modelo.agregar(dato);
-					System.out.println("Dato agregado");
-					System.out.println("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
-
-				case 3:
-					System.out.println("--------- \nDar cadena (simple) a buscar: ");
-					dato = lector.next();
-					respuesta = modelo.buscar(dato);
-					if ( respuesta != null)
-					{
-						System.out.println("Dato encontrado: "+ respuesta);
-					}
-					else
-					{
-						System.out.println("Dato NO encontrado");
-					}
-					System.out.println("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
-
-				case 4:
-					System.out.println("--------- \nDar cadena (simple) a eliminar: ");
-					dato = lector.next();
-					respuesta = modelo.eliminar(dato);
-					if ( respuesta != null)
-					{
-						System.out.println("Dato eliminado "+ respuesta);
-					}
-					else
-					{
-						System.out.println("Dato NO eliminado");							
-					}
-					System.out.println("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
-
-				case 5: 
-					System.out.println("--------- \nContenido del Arreglo: ");
-					view.printModelo(modelo);
-					System.out.println("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;	
-					
-				case 6: 
+			System.out.println("\nDe el numero de viajes que desea ver: ");
+			System.out.println("Escriba -1 para salir");
+			dato[0] = lector.nextInt();
+			if(dato[0] != -1){
+				
+				System.out.println("\nDe la hora inicial para los viajes: ");
+				dato[1] = lector.nextInt();
+				System.out.println("\nDe la hora final para los viajes: ");
+				dato[2] = lector.nextInt();
+				
+				long startTime = System.currentTimeMillis(); // medición tiempo actual
+				MaxHeapCP<TravelTime> heap = modelo.crearMaxHeapCP(dato[0], dato[1], dato[2]);
+				long endTime = System.currentTimeMillis(); // medición tiempo actual
+				long duration = endTime - startTime; // duracion de ejecucion del algoritmo
+				view.printMessage("Tiempo de ejecucion crearMaxHeapCP: " + duration + " milisegundos");
+				 
+				startTime = System.currentTimeMillis(); // medición tiempo actual
+				MaxColaCp<TravelTime> cola = modelo.crearMaxColaCP(dato[0], dato[1], dato[2]);
+				endTime = System.currentTimeMillis(); // medición tiempo actual
+				duration = endTime - startTime; // duracion de ejecucion del algoritmo
+				view.printMessage("Tiempo de ejecucion crearMaxColaCP: " + duration + " milisegundos");
+				
+				
+			}else{
 					System.out.println("--------- \n Hasta pronto !! \n---------"); 
 					lector.close();
 					fin = true;
-					break;	
-
-				default: 
-					System.out.println("--------- \n Opcion Invalida !! \n---------");
-					break;
-			}
+			}		
 		}
-		
-	}	
+	}
+	
 }
